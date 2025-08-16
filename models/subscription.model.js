@@ -86,3 +86,4 @@ subscriptionSchema.pre('save',function(next){
     next();
 
 })
+export default subscriptionSchema;

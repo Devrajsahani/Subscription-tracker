@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import { JsonWebTokenError } from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken";
 
 
 // what is a req body?-> req.body is an boject containing data from the client

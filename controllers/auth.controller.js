@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
+import { JWT_EXPIRE_IN } from "../config/env.js";
+import User from "../models/user.model.js";
 
 
 // what is a req body?-> req.body is an boject containing data from the client
@@ -34,7 +36,7 @@ try{
         message:'User created successfully',
         data:{
             token,
-            user:newUsers[0],
+            user:newUser[0],
         }
     })
 
@@ -47,6 +49,39 @@ try{
 }
 export const signIn = async (req,res,next)=>{
 // implement sign up logic here
+try{
+    const{email,password}=req.body;
+
+    const user = await User.findOne({email});
+
+    if(!user){
+        const error = new Error('User not found');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password,user.password);
+
+    if(!isPasswordValid){
+        const error = new Error('Invalide password');
+        error.statusCode = 401;
+        throw error;
+    }
+
+    const token = jwt.sign({userId:user._id},JWT_SECRET, {expiresIn:JWT_EXPIRE_IN});
+    res.status(200).json({
+        success:true,
+        message:'User signed in successfully',
+        data:{
+            token,
+            user,
+        }
+    })
+
+}catch(error){
+    next(error);
+
+}
 }
 export const signOut= async (req,res,next)=>{
 // implement sign up logic here

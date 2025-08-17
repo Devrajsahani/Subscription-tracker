@@ -6,11 +6,13 @@ import authRouter from "./routes/auth.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
 import connectToDatabase from "./database/mongodb.js";
 import errorMiddleware from "./middleware/error.middleware.js";
+import arcjetMiddleware from "./middleware/arcjet.middleware.js";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
+app.use(arcjetMiddleware);
 
 // the code below just means, that if we press the sign up then this below line will execute.
 

@@ -14,7 +14,7 @@ session.startTransaction(); // we are using this transaction because we need to 
 
 try{
     // create a new user
-    const{email,password}= req.body;
+    const{username,email,password}= req.body;
     // check if the user already exists
     const exisitingUser = await User.findOne({email})
 
@@ -25,9 +25,9 @@ try{
     }
 
     // hash password (securing password)
-    const salt= await bcrypt.gensalt(10);
-    const hashPassword = await bcrypt.hash(password,salt);
-    const newUser = await User.create([{name,email,password:hashedPassword}],{session});
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password,salt);
+    const newUser = await User.create({name,email,password:hashedPassword},{session});
     const token = jwt.sign({userId:newUser[0]._id},JWT_SECRET, {expiresIn:JWT_EXPIRE_IN})
     await session.commitTransaction();
     session.endSession();
